@@ -13,4 +13,4 @@ if (!fs.existsSync(modulePath)) {
 }
 
 process.argv = [...process.argv.slice(3)];
-require(modulePath)(process.env.PWD, ...process.argv);
+require(modulePath)(process.cwd(), ...process.argv);
