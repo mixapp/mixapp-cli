@@ -1,6 +1,6 @@
 {
   "name": "mixapp-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mixapp command line interface (beta)",
   "main": "index.js",
   "bin": "index.js",
@@ -9,7 +9,9 @@
   },
   "author": "",
   "license": "ISC",
+
   "dependencies": {
-    "mixapp": "^1.4.8"
+    "mixapp": "^1.4.8",
+    "prompt": "^1.0.0"
   }
 }
