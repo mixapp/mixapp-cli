@@ -8,6 +8,8 @@ module.exports = async (path, ...args) => {
         let wp = await utils.service.workplaces.get(cfg.workplace);
         let process = await wp.processes.get(cfg.processId);
 
+        await process.stop();
+
         let conns = await utils.walkConnectors(path);
         for (let i = 0; i < conns.length; i++) {
             if (conns[i].type === 'start' || conns[i].type === 'stop') {
@@ -15,6 +17,9 @@ module.exports = async (path, ...args) => {
             }
             await process.updateConnector(conns[i].id, conns[i]);
         }
+
+        await process.start();
+        console.log('Done.');
         
     } catch (err) {
         utils.error(err);

@@ -18,23 +18,35 @@ const rmDir = (path) => {
                 rmDir(filePath);
         }
         fs.rmdirSync(path);
-    } 
+    }
 };
 
 const concatConnector = async (metadata, id, path) => {
 
     try {
         let params = JSON.parse(fs.readFileSync(`${path}/${id}.json`).toString());
+        let code = {
+            before: '',
+            after: ''
+        };
         let files = fs.readdirSync(path);
         for (let i = 0; i < files.length; i++) {
             if (files[i] === `${id}.json`) {
                 continue;
             }
+
             let file = fs.readFileSync(`${path}/${files[i]}`).toString();
-            params[files[i].replace(/\.[^/.]+$/, '')] = file;
+            if (files[i] === 'before.js') {
+                code.before = file;
+            } else if (files[i] === 'after.js') {
+                code.after = file;
+            } else {
+                params[files[i].replace(/\.[^/.]+$/, '')] = file;
+            }
         }
         return {
-            params
+            params,
+            code
         };
     } catch (err) {
         throw err;
@@ -87,7 +99,7 @@ module.exports.saveConnectors = (path, conns) => {
     for (let i = 0; i < conns.length; i++) {
         let dir = `${conns[i].name}(${conns[i].id})`;
         fs.mkdirSync(`${path}/connectors/${dir}`);
- 
+
         if (conns[i].type === 'expression' || conns[i].type === 'case') {
             fs.writeFileSync(`${path}/connectors/${dir}/code.js`, conns[i].params.code);
             delete conns[i].params.code;
@@ -126,8 +138,8 @@ module.exports.saveConnectorsMetadata = (path, conns) => {
 
 module.exports.userInput = (opts) => {
     return new Promise((resolve, reject) => {
-        prompt.start({message:'Enter'});
-        prompt.get(opts, function(err, result) {
+        prompt.start({ message: 'Enter' });
+        prompt.get(opts, function (err, result) {
             if (err) {
                 return reject(err);
             } else {
