@@ -100,6 +100,10 @@ module.exports.saveConnectors = (path, conns) => {
         let dir = `${conns[i].name}(${conns[i].id})`;
         fs.mkdirSync(`${path}/connectors/${dir}`);
 
+        fs.writeFileSync(`${path}/connectors/${dir}/before.js`, conns[i].code.before);
+        fs.writeFileSync(`${path}/connectors/${dir}/after.js`, conns[i].code.after);
+
+
         if (conns[i].type === 'expression' || conns[i].type === 'case') {
             fs.writeFileSync(`${path}/connectors/${dir}/code.js`, conns[i].params.code);
             delete conns[i].params.code;
