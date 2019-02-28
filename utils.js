@@ -26,8 +26,7 @@ const concatConnector = async (metadata, id, path) => {
     try {
         let params = JSON.parse(fs.readFileSync(`${path}/${id}.json`).toString());
         let code = {
-            before: '',
-            after: ''
+            before: ''
         };
         let files = fs.readdirSync(path);
         for (let i = 0; i < files.length; i++) {
@@ -38,8 +37,6 @@ const concatConnector = async (metadata, id, path) => {
             let file = fs.readFileSync(`${path}/${files[i]}`).toString();
             if (files[i] === 'before.js') {
                 code.before = file;
-            } else if (files[i] === 'after.js') {
-                code.after = file;
             } else {
                 params[files[i].replace(/\.[^/.]+$/, '')] = file;
             }
@@ -100,9 +97,7 @@ module.exports.saveConnectors = (path, conns) => {
         let dir = `${conns[i].name}(${conns[i].id})`;
         fs.mkdirSync(`${path}/connectors/${dir}`);
 
-        fs.writeFileSync(`${path}/connectors/${dir}/before.js`, conns[i].code.before);
-        fs.writeFileSync(`${path}/connectors/${dir}/after.js`, conns[i].code.after);
-
+        fs.writeFileSync(`${path}/connectors/${dir}/before.js`, conns[i].before);
 
         if (conns[i].type === 'expression' || conns[i].type === 'case') {
             fs.writeFileSync(`${path}/connectors/${dir}/code.js`, conns[i].params.code);
